@@ -1,0 +1,38 @@
+version: '1.0'
+services:
+  server:
+    build: ./server
+    ports:
+      -"8080:8080"
+    volumes:
+      -./server:/app
+    restart: always
+    depends_on:
+      - db
+  clinet:
+     build: ./client
+     ports:
+      -"8081:8080" 		# change 8181 to whatever port you want it to be.
+     volumes:
+      -./client:/app 		# change 2181 to whatever port you want it to be.
+     restart: always
+     depends_on:
+      - server
+      - db
+     
+    
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres-data:		# needed for container_name to work.
+      
